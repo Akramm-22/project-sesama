@@ -228,9 +228,14 @@
                     <td>{{ $recipient->birth_place }}, {{ $recipient->birth_date->format('d F Y') }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Sekolah</td>
+                    <td class="label">Umur</td>
                     <td class="colon">:</td>
-                    <td>{{ $recipient->school_name }} ({{ $recipient->school_level }})</td>
+                    <td>
+                        @php
+                            $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
+                        @endphp
+                        {{ $displayAge ? $displayAge . ' Tahun' : '-' }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Kelas</td>
@@ -257,47 +262,7 @@
                         <th style="width: 15%;">Keterangan</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td class="text-left">Seragam Sekolah</td>
-                        <td>Ukuran {{ $recipient->shirt_size }}</td>
-                        <td>
-                            @if($recipient->uniform_received)
-                                <span class="status-received">✓ DITERIMA</span>
-                            @else
-                                <span>BELUM</span>
-                            @endif
-                        </td>
-                        <td>1 Set</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td class="text-left">Sepatu Sekolah</td>
-                        <td>Ukuran {{ $recipient->shoe_size }}</td>
-                        <td>
-                            @if($recipient->shoes_received)
-                                <span class="status-received">✓ DITERIMA</span>
-                            @else
-                                <span>BELUM</span>
-                            @endif
-                        </td>
-                        <td>1 Pasang</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td class="text-left">Tas Sekolah</td>
-                        <td>Standard</td>
-                        <td>
-                            @if($recipient->bag_received)
-                                <span class="status-received">✓ DITERIMA</span>
-                            @else
-                                <span>BELUM</span>
-                            @endif
-                        </td>
-                        <td>1 Buah</td>
-                    </tr>
-                </tbody>
+
             </table>
         </div>
 

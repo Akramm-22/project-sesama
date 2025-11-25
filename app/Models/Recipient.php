@@ -14,12 +14,17 @@ class Recipient extends Model
         'child_name',
         'Ayah_name',
         'Ibu_name',
+        'whatsapp_number',
         'registrasi',
         'birth_place',
         'birth_date',
+        'age',
         'school_level',
         'school_name',
         'address',
+        'region',
+        'reference_source',
+        'id_card_photo_path',
         'class',
         'shoe_size',
         'shirt_size',
@@ -27,7 +32,10 @@ class Recipient extends Model
         'shoes_received',
         'bag_received',
         'is_distributed',
-        'distributed_at'
+        'distributed_at',
+        'has_circumcision',
+        'has_received_gift',
+        'has_photo_booth',
     ];
 
     protected $casts = [
@@ -36,7 +44,10 @@ class Recipient extends Model
         'shoes_received' => 'boolean',
         'bag_received' => 'boolean',
         'is_distributed' => 'boolean',
-        'distributed_at' => 'datetime'
+        'distributed_at' => 'datetime',
+        'has_circumcision' => 'boolean',
+        'has_received_gift' => 'boolean',
+        'has_photo_booth' => 'boolean',
     ];
 
     public function isFullyDistributed()

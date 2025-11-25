@@ -71,16 +71,19 @@
                     <td>{{ $recipient->child_name }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Orang Ayah:</strong></td>
+                    <td><strong>Nama Ayah:</strong></td>
                     <td>{{ $recipient->Ayah_name }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Orang Ibu:</strong></td>
+                    <td><strong>Nama Ibu:</strong></td>
                     <td>{{ $recipient->Ibu_name }}</td>
                 </tr>
                 <tr>
-                    <td><strong>Sekolah:</strong></td>
-                    <td>{{ $recipient->school_name }}</td>
+                    <td><strong>Umur:</strong></td>
+                    @php
+                        $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
+                    @endphp
+                    <td>{{ $displayAge ? $displayAge . ' Tahun' : '-' }}</td>
                 </tr>
                 <tr>
                     <td><strong>Kelas:</strong></td>

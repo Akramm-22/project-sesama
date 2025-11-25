@@ -210,8 +210,8 @@
                                 <input type="date" name="birth_date" id="birth_date" class="form-control">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nama Sekolah</label>
-                                <input type="text" name="school_name" id="school_name" class="form-control">
+                                <label class="form-label">Umur</label>
+                                <input type="number" min="1" max="25" name="age" id="age" class="form-control">
                             </div>
                         </div>
 
@@ -229,9 +229,6 @@
                         </div>
 
 
-                        <div class="text-center mt-2">
-                            <small class="text-muted">Status saat ini: <span id="current_status" class="fw-bold">-</span></small>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -272,6 +269,8 @@ const cameraArea = document.getElementById('camera-area');
 const manualWrapper = document.getElementById('manual-input-wrapper');
 const readerId = 'reader';
 const btnStopCamera = document.getElementById('btnStopCamera');
+const ageInput = document.getElementById('age');
+const birthDateInput = document.getElementById('birth_date');
 
 
 let scannerInstance = null;
@@ -372,10 +371,14 @@ function verifyQr(qrCode) {
             document.getElementById('Ayah_name').value = data.recipient.Ayah_name || '';
             document.getElementById('Ibu_name').value = data.recipient.Ibu_name || '';
             document.getElementById('birth_place').value = data.recipient.birth_place || '';
-            document.getElementById('birth_date').value = data.recipient.birth_date || '';
-            document.getElementById('school_name').value = data.recipient.school_name || '';
+            const birthDateValue = data.recipient.birth_date || '';
+            birthDateInput.value = birthDateValue;
+            if (data.recipient.age) {
+                ageInput.value = data.recipient.age;
+            } else {
+                syncAgeWithBirthDate();
+            }
             document.getElementById('address').value = data.recipient.address || '';
-            document.getElementById('current_status').innerText = data.recipient.status || '-';
 
 
             showPopup('success', 'QR Valid! Edit data jika perlu lalu Simpan.');
@@ -427,8 +430,6 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
     .then(resp => {
         if (resp.success) {
             showPopup('success', resp.message || 'Registrasi berhasil.');
-            // update status text
-            document.getElementById('current_status').innerText = 'registered';
             setTimeout(() => location.reload(), 1200);
         } else {
             showPopup('error', resp.error || 'Gagal memperbarui data.');
@@ -438,6 +439,24 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
         showPopup('error', 'Gagal koneksi ke server!');
     });
 });
+
+function syncAgeWithBirthDate() {
+    const dateVal = birthDateInput.value;
+    if (!dateVal) return;
+    const today = new Date();
+    const birth = new Date(dateVal);
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    ageInput.value = age > 0 ? age : '';
+}
+
+birthDateInput?.addEventListener('change', syncAgeWithBirthDate);
+if (birthDateInput?.value && !ageInput.value) {
+    syncAgeWithBirthDate();
+}
 </script>
 
 

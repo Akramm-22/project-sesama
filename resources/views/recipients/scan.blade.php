@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Penyaluran Bantuan')
+@section('title', 'Penyaluran')
 
 @section('content')
 <style>
@@ -149,13 +149,44 @@
                         Form Penyaluran
                     </h5>
 
-                    <form id="distributeForm">
+                    <form id="distributeForm" data-action-template="{{ route('recipients.distribute', ['recipient' => '__RECIPIENT_ID__']) }}">
                         @csrf
                         <input type="hidden" name="recipient_id" id="recipient_id_2">
 
                         <div class="mb-3">
                             <label class="form-label">Tanggal Penyaluran</label>
-                            <input type="date" name="delivery_date" class="form-control" required>
+                            <input type="date" name="delivery_date" id="delivery_date_field"
+                                   class="form-control" value="{{ now()->format('Y-m-d') }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Checklist Status Penerima</label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="status_registrasi" name="registrasi">
+                                        <label class="form-check-label" for="status_registrasi">Sudah Registrasi</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="status_khitan" name="has_circumcision">
+                                        <label class="form-check-label" for="status_khitan">Sudah Khitan</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="status_gift" name="has_received_gift">
+                                        <label class="form-check-label" for="status_gift">Sudah Terima Uang & Bingkisan</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="status_photo" name="has_photo_booth">
+                                        <label class="form-check-label" for="status_photo">Sudah Foto Booth</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -178,15 +209,77 @@
 </div>
 
 <script>
+const deliveryDateInput = document.getElementById('delivery_date_field');
+const today = new Date().toISOString().split('T')[0];
+if (deliveryDateInput && !deliveryDateInput.value) {
+    deliveryDateInput.value = today;
+}
+
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+const statusControls = {
+    registrasi: document.getElementById('status_registrasi'),
+    khitan: document.getElementById('status_khitan'),
+    gift: document.getElementById('status_gift'),
+    photo: document.getElementById('status_photo'),
+};
+
+function promptStatusChecklist(currentStates) {
+    Swal.fire({
+        title: 'Checklist Penyaluran',
+        html: `
+            <div class="text-start">
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="popup_registrasi" ${currentStates.registrasi ? 'checked' : ''}>
+                    <label class="form-check-label" for="popup_registrasi">Registrasi</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="popup_khitan" ${currentStates.khitan ? 'checked' : ''}>
+                    <label class="form-check-label" for="popup_khitan">Khitan</label>
+                </div>
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" id="popup_gift" ${currentStates.gift ? 'checked' : ''}>
+                    <label class="form-check-label" for="popup_gift">Uang Binaan & Bingkisan</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="popup_photo" ${currentStates.photo ? 'checked' : ''}>
+                    <label class="form-check-label" for="popup_photo">Foto Booth</label>
+                </div>
+            </div>
+        `,
+        confirmButtonText: 'Simpan Checklist',
+        confirmButtonColor: '#2563eb',
+        focusConfirm: false,
+        preConfirm: () => ({
+            registrasi: document.getElementById('popup_registrasi').checked,
+            khitan: document.getElementById('popup_khitan').checked,
+            gift: document.getElementById('popup_gift').checked,
+            photo: document.getElementById('popup_photo').checked,
+        })
+    }).then(result => {
+        if (result.isConfirmed && result.value) {
+            statusControls.registrasi.checked = result.value.registrasi;
+            statusControls.khitan.checked = result.value.khitan;
+            statusControls.gift.checked = result.value.gift;
+            statusControls.photo.checked = result.value.photo;
+        }
+    });
+}
+
 // ===================================
 // VERIFIKASI QR
 // ===================================
 document.getElementById('verifyForm').addEventListener('submit', function(e){
     e.preventDefault();
 
+    const formData = new FormData(this);
     fetch("{{ route('recipients.verify-qr') }}", {
         method: "POST",
-        body: new FormData(this)
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        body: formData
     })
     .then(res => res.json())
     .then(data => {
@@ -202,10 +295,27 @@ document.getElementById('verifyForm').addEventListener('submit', function(e){
         const r = data.recipient;
         document.getElementById('recipient_id').value = r.id;
         document.getElementById('recipient_id_2').value = r.id;
+        const form = document.getElementById('distributeForm');
+        const template = form.dataset.actionTemplate;
+        if (template) {
+            form.action = template.replace('__RECIPIENT_ID__', r.id);
+        }
 
         document.getElementById('child_name').value = r.child_name;
         document.getElementById('Ayah_name').value = r.Ayah_name;
         document.getElementById('Ibu_name').value = r.Ibu_name;
+
+        if (statusControls.registrasi) statusControls.registrasi.checked = Boolean(r.registrasi);
+        if (statusControls.khitan) statusControls.khitan.checked = Boolean(r.has_circumcision);
+        if (statusControls.gift) statusControls.gift.checked = Boolean(r.has_received_gift);
+        if (statusControls.photo) statusControls.photo.checked = Boolean(r.has_photo_booth);
+
+        promptStatusChecklist({
+            registrasi: Boolean(r.registrasi),
+            khitan: Boolean(r.has_circumcision),
+            gift: Boolean(r.has_received_gift),
+            photo: Boolean(r.has_photo_booth),
+        });
     })
     .catch(() => showPopup("error", "Gagal menghubungi server"));
 });
@@ -218,11 +328,23 @@ document.getElementById('distributeForm').addEventListener('submit', function(e)
 
     const id = document.getElementById('recipient_id').value;
 
-    fetch(`/recipients/${id}/distribute`, {
+    const targetUrl = this.action || `/recipients/${id}/distribute`;
+    const formData = new FormData(this);
+
+    fetch(targetUrl, {
         method: "POST",
-        body: new FormData(this)
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        body: formData
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('HTTP ' + res.status);
+        }
+        return res.json();
+    })
     .then(data => {
         if (data.success) {
             showPopup("success", "Penyaluran Berhasil!");

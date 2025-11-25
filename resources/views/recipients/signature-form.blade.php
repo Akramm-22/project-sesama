@@ -178,9 +178,14 @@
                     <td>{{ $recipient->Ibu_name }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Sekolah</td>
+                    <td class="label">Umur</td>
                     <td class="colon">:</td>
-                    <td>{{ $recipient->school_name }} ({{ $recipient->school_level }})</td>
+                    <td>
+                        @php
+                            $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
+                        @endphp
+                        {{ $displayAge ? $displayAge . ' Tahun' : '-' }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label">Kelas</td>

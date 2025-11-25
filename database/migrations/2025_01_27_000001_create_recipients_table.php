@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('Ibu_name');
             $table->string('birth_place');
             $table->date('birth_date');
+            $table->unsignedTinyInteger('age')->nullable();
             $table->string('school_level');
             $table->string('school_name');
             $table->text('address');

@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Recipient;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
 {
@@ -35,9 +37,9 @@ class RegistrationController extends Controller
                 'Ibu_name' => $recipient->Ibu_name,
                 'birth_place' => $recipient->birth_place,
                 'birth_date' => $recipient->birth_date
-                    ? \Carbon\Carbon::parse($recipient->birth_date)->format('Y-m-d')
+                    ? Carbon::parse($recipient->birth_date)->format('Y-m-d')
                     : null,
-                'school_name' => $recipient->school_name,
+                'age' => $recipient->age ?? ($recipient->birth_date ? Carbon::parse($recipient->birth_date)->age : null),
                 'address' => $recipient->address
             ]
         ]);
@@ -53,7 +55,7 @@ class RegistrationController extends Controller
             'Ibu_name' => 'nullable|string|max:255',
             'birth_place' => 'nullable|string|max:255',
             'birth_date' => 'required|date',
-            'school_name' => 'nullable|string|max:255',
+            'age' => 'required|integer|min:1|max:25',
             'address' => 'nullable|string|max:500',
         ]);
 
@@ -73,8 +75,10 @@ class RegistrationController extends Controller
         $recipient->Ibu_name = $request->Ibu_name;
         $recipient->birth_place = $request->birth_place;
         $recipient->birth_date = $request->birth_date;
-        $recipient->school_name = $request->school_name;
         $recipient->address = $request->address;
+        $recipient->age = $request->age ?? ($request->birth_date ? Carbon::parse($request->birth_date)->age : null);
+        $recipient->school_name = 'N/A';
+        $recipient->school_level = 'N/A';
         $recipient->registrasi = true;
         $recipient->save();
 

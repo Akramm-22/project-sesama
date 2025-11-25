@@ -10,7 +10,7 @@
                 <h5 class="mb-0">Tambah Data Penerima Baru</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('recipients.store') }}" method="POST">
+                <form action="{{ route('recipients.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row">
@@ -22,27 +22,35 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="whatsapp_number" class="form-label">Nomor WhatsApp</label>
+                            <input type="text" class="form-control @error('whatsapp_number') is-invalid @enderror"
+                                   id="whatsapp_number" name="whatsapp_number" value="{{ old('whatsapp_number') }}"
+                                   placeholder="08xxxxxxxxxx">
+                            @error('whatsapp_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
 
-                        <div class="row">
-    <div class="col-md-6 mb-3">
-        <label for="Ayah_name" class="form-label">Nama Ayah <span class="text-danger">*</span></label>
-        <input type="text" class="form-control @error('Ayah_name') is-invalid @enderror"
-               id="Ayah_name" name="Ayah_name" value="{{ old('Ayah_name') }}" required>
-        @error('Ayah_name')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Ayah_name" class="form-label">Nama Ayah <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('Ayah_name') is-invalid @enderror"
+                                   id="Ayah_name" name="Ayah_name" value="{{ old('Ayah_name') }}" required>
+                            @error('Ayah_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-    <div class="col-md-6 mb-3">
-        <label for="Ibu_name" class="form-label">Nama Ibu <span class="text-danger">*</span></label>
-        <input type="text" class="form-control @error('Ibu_name') is-invalid @enderror"
-               id="Ibu_name" name="Ibu_name" value="{{ old('Ibu_name') }}" required>
-        @error('Ibu_name')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
-
+                        <div class="col-md-6 mb-3">
+                            <label for="Ibu_name" class="form-label">Nama Ibu <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('Ibu_name') is-invalid @enderror"
+                                   id="Ibu_name" name="Ibu_name" value="{{ old('Ibu_name') }}" required>
+                            @error('Ibu_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="row">
@@ -67,37 +75,58 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="school_level" class="form-label">Tingkat Sekolah <span class="text-danger">*</span></label>
-                            <select class="form-select @error('school_level') is-invalid @enderror"
-                                    id="school_level" name="school_level" required>
-                                <option value="">Pilih Tingkat</option>
-                                <option value="SD" {{ old('school_level') == 'SD' ? 'selected' : '' }}>SD</option>
-                                <option value="SMP" {{ old('school_level') == 'SMP' ? 'selected' : '' }}>SMP</option>
-                                <option value="SMA" {{ old('school_level') == 'SMA' ? 'selected' : '' }}>SMA</option>
-                                <option value="SMK" {{ old('school_level') == 'SMK' ? 'selected' : '' }}>SMK</option>
-                            </select>
-                            @error('school_level')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="school_name" class="form-label">Nama Sekolah <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('school_name') is-invalid @enderror"
-                                   id="school_name" name="school_name" value="{{ old('school_name') }}" required>
-                            @error('school_name')
+                            <label for="age" class="form-label">Umur <span class="text-danger">*</span></label>
+                            <input type="number" min="1" max="25" class="form-control @error('age') is-invalid @enderror"
+                                   id="age" name="age" value="{{ old('age') }}" required>
+                            @error('age')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Alamat <span class="text-danger">*</span></label>
-                        <textarea class="form-control @error('address') is-invalid @enderror"
-                                  id="address" name="address" rows="3" required>{{ old('address') }}</textarea>
-                        @error('address')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <div class="col-lg-8 mb-3">
+                            <label for="address" class="form-label">Alamat <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('address') is-invalid @enderror"
+                                      id="address" name="address" rows="4" required>{{ old('address') }}</textarea>
+                            @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label for="region" class="form-label">Wilayah</label>
+                                <select class="form-select @error('region') is-invalid @enderror" id="region" name="region">
+                                    <option value="">Pilih Wilayah</option>
+                                    @foreach($regionOptions as $key => $label)
+                                        <option value="{{ $key }}" {{ old('region') === $key ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('region')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="reference_source" class="form-label">Referensi</label>
+                                <input type="text" class="form-control @error('reference_source') is-invalid @enderror"
+                                       id="reference_source" name="reference_source" value="{{ old('reference_source') }}"
+                                       placeholder="Contoh: Sekolah / RT / Relawan">
+                                @error('reference_source')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_card_photo" class="form-label">Foto ID Card</label>
+                                <input type="file" class="form-control @error('id_card_photo') is-invalid @enderror"
+                                       id="id_card_photo" name="id_card_photo" accept="image/*">
+                                <small class="text-muted">Format JPG/PNG maks. 2MB</small>
+                                @error('id_card_photo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -151,3 +180,32 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    const birthDateCreate = document.getElementById('birth_date');
+    const ageCreate = document.getElementById('age');
+
+    function calcAge(dateString) {
+        if (!dateString) return '';
+        const today = new Date();
+        const birth = new Date(dateString);
+        let age = today.getFullYear() - birth.getFullYear();
+        const diffMonth = today.getMonth() - birth.getMonth();
+        if (diffMonth < 0 || (diffMonth === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+        return age > 0 ? age : '';
+    }
+
+    function syncAge() {
+        ageCreate.value = calcAge(birthDateCreate.value);
+    }
+
+    birthDateCreate?.addEventListener('change', syncAge);
+
+    if (birthDateCreate?.value && !ageCreate.value) {
+        syncAge();
+    }
+</script>
+@endpush

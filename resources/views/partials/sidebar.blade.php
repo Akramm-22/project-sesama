@@ -20,6 +20,9 @@
         </div>
 
         <!-- Navigasi -->
+        @php
+            $regionMenuOptions = \App\Http\Controllers\RecipientController::REGION_OPTIONS;
+        @endphp
         <ul class="nav flex-column">
             <li class="nav-item mb-1">
                 <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
@@ -27,10 +30,29 @@
                 </a>
             </li>
             <li class="nav-item mb-1">
-                <a class="nav-link {{ request()->routeIs('recipients.index') ? 'active' : '' }}"
-                    href="{{ route('recipients.index') }}">
-                    <i class="fas fa-users me-3"></i> Data Penerima
-                </a>
+                <div class="dropdown w-100">
+                    <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle {{ request()->routeIs('recipients.*') ? 'active' : '' }}"
+                        href="{{ route('recipients.index') }}"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside">
+                        <span><i class="fas fa-users me-3"></i> Data Penerima</span>
+                        <i class="fas fa-chevron-down small"></i>
+                    </a>
+                    <div class="dropdown-menu w-100 shadow border-0 mt-2 px-0">
+                        <a class="dropdown-item small fw-semibold py-2 {{ request('region') ? '' : 'active-region' }}"
+                           href="{{ route('recipients.index') }}">
+                            Semua Wilayah
+                        </a>
+                        <div class="dropdown-divider my-0"></div>
+                        @foreach($regionMenuOptions as $key => $label)
+                            <a class="dropdown-item small py-2 {{ request('region') === $key ? 'active-region' : '' }}"
+                               href="{{ route('recipients.index', ['region' => $key]) }}">
+                                {{ $label }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             </li>
             <li class="nav-item mb-1">
                 <a class="nav-link {{ request()->routeIs('registration') ? 'active' : '' }}"
@@ -125,11 +147,25 @@
     background: white !important;
     color: var(--primary-blue) !important;
 }
-    .sidebar-mobile .nav-link:hover,
+        .sidebar-mobile .nav-link:hover,
         .sidebar-mobile .nav-link.active {
             color: var(--primary-blue);
             background-color: white;
             transform: translateX(5px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+.sidebar .dropdown-menu {
+    background: rgba(255,255,255,0.98);
+    border-radius: 14px;
+    padding: 6px 0;
+}
+.sidebar .dropdown-item {
+    font-weight: 500;
+    color: #1e3a8a;
+}
+.sidebar .dropdown-item.active-region,
+.sidebar .dropdown-item:hover {
+    background: rgba(37, 99, 235, 0.1);
+    color: #0f172a;
+}
 </style>

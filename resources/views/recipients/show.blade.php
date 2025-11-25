@@ -34,18 +34,53 @@
                                 <td>{{ $recipient->Ibu_name }}</td>
                             </tr>
                             <tr>
+                                <td><strong>Nomor WhatsApp:</strong></td>
+                                <td>{{ $recipient->whatsapp_number ?? '-' }}</td>
+                            </tr>
+                            <tr>
                                 <td><strong>Tempat, Tanggal Lahir:</strong></td>
                                 <td>{{ $recipient->birth_place }}, {{ $recipient->birth_date->format('d F Y') }}</td>
                             </tr>
                             <tr>
-                                <td><strong>Tingkat Sekolah:</strong></td>
-                                <td>{{ $recipient->school_level }}</td>
+                                <td><strong>Umur:</strong></td>
+                                @php
+                                    $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
+                                @endphp
+                                <td>{{ $displayAge ? $displayAge . ' Tahun' : '-' }}</td>
                             </tr>
                             <tr>
-                                <td><strong>Nama Sekolah:</strong></td>
-                                <td>{{ $recipient->school_name }}</td>
+                                <td><strong>Alamat:</strong></td>
+                                <td>{{ $recipient->address }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wilayah:</strong></td>
+                                <td>{{ $regionLabel ?? 'Belum ditentukan' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Referensi:</strong></td>
+                                <td>{{ $recipient->reference_source ?? '-' }}</td>
                             </tr>
                         </table>
+                    </div>
+                </div>
+
+                <div class="border-top pt-4 mt-4">
+                    <h6 class="fw-bold mb-3">Status Penyaluran</h6>
+                    @php
+                        $statuses = [
+                            ['label' => 'Registrasi', 'state' => $recipient->registrasi],
+                            ['label' => 'Khitan', 'state' => $recipient->has_circumcision],
+                            ['label' => 'Uang & Bingkisan', 'state' => $recipient->has_received_gift],
+                            ['label' => 'Foto Booth', 'state' => $recipient->has_photo_booth],
+                        ];
+                    @endphp
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach($statuses as $status)
+                            <span class="badge rounded-pill {{ $status['state'] ? 'bg-success' : 'bg-secondary' }}">
+                                <i class="fas {{ $status['state'] ? 'fa-check-circle me-1' : 'fa-minus-circle me-1' }}"></i>
+                                {{ $status['label'] }}
+                            </span>
+                        @endforeach
                     </div>
                 </div>
 
@@ -67,7 +102,6 @@
         </div>
     </div>
 
-    <!-- QR Code -->
     <div class="col-md-4">
         <div class="card shadow">
             <div class="card-header">

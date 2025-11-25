@@ -4,54 +4,94 @@ namespace App\Http\Controllers;
 
 use App\Models\Recipient;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use ZipArchive;
 
 class RecipientController extends Controller
 {
+    public const REGION_OPTIONS = [
+        'wilayah_1' => 'Wilayah 1 - RW 01',
+        'wilayah_2' => 'Wilayah 2 - RW 02',
+        'wilayah_3' => 'Wilayah 3 - RW 03',
+        'wilayah_4' => 'Wilayah 4 - RW 04',
+        'wilayah_5' => 'Wilayah 5 - RW 05',
+        'wilayah_6' => 'Wilayah 6 - RW 06',
+        'wilayah_7' => 'Wilayah 7 - RW 07',
+        'wilayah_8' => 'Wilayah 8 - RW 08',
+        'wilayah_9' => 'Wilayah 9 - RW 09',
+    ];
+
 
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $regionFilter = $request->input('region');
+        $regionOptions = $this->getRegionOptions();
 
         $recipients = Recipient::when($search, function ($query, $search) {
-            $query->where('child_name', 'LIKE', "%{$search}%");
-        })
+                $query->where('child_name', 'LIKE', "%{$search}%");
+            })
+            ->when($regionFilter, function ($query, $regionFilter) {
+                $query->where('region', $regionFilter);
+            })
             ->orderBy('child_name', 'asc')
-            ->paginate(10);
-
-        return view('recipients.index', compact('recipients'));
+            ->paginate(10)
+            ->withQueryString();
+        return view('recipients.index', [
+            'recipients' => $recipients,
+            'regionOptions' => $regionOptions,
+            'regionFilter' => $regionFilter,
+        ]);
     }
 
     public function create()
     {
-        return view('recipients.create');
+        return view('recipients.create', [
+            'regionOptions' => $this->getRegionOptions(),
+        ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $regionKeys = array_keys($this->getRegionOptions());
+
+        $validated = $request->validate([
             'child_name' => 'required|string|max:255',
             'Ayah_name' => 'required|string|max:255',
             'Ibu_name' => 'required|string|max:255',
+            'whatsapp_number' => 'nullable|string|max:20',
             'birth_place' => 'required|string|max:255',
             'birth_date' => 'required|date',
-            'school_level' => 'required|string|max:255',
-            'school_name' => 'required|string|max:255',
+            'age' => 'required|integer|min:1|max:25',
             'address' => 'required|string',
+            'region' => ['nullable', Rule::in($regionKeys)],
+            'reference_source' => 'nullable|string|max:255',
             'class' => 'required|string|max:255',
             'shoe_size' => 'required|string|max:10',
             'shirt_size' => 'required|string|max:10',
+            'id_card_photo' => 'nullable|image|max:2048',
         ]);
 
         // Generate unique QR code
         $qrCode = $this->generateUniqueQrCode();
 
-        $recipient = Recipient::create(array_merge($request->all(), [
-            'qr_code' => $qrCode
-        ]));
+        $data = array_merge($validated, [
+            'qr_code' => $qrCode,
+        ]);
+
+        $data['school_level'] = 'N/A';
+        $data['school_name'] = 'N/A';
+
+        $data['id_card_photo_path'] = $this->storeIdCard($request->file('id_card_photo'));
+        unset($data['id_card_photo']);
+
+        $recipient = Recipient::create($data);
 
         return redirect()->route('recipients.index')
             ->with('success', 'Data penerima berhasil ditambahkan dengan QR Code: ' . $qrCode);
@@ -59,26 +99,38 @@ class RecipientController extends Controller
 
     public function show(Recipient $recipient)
     {
-        return view('recipients.show', compact('recipient'));
+        return view('recipients.show', [
+            'recipient' => $recipient,
+            'regionLabel' => $recipient->region
+                ? ($this->getRegionOptions()[$recipient->region] ?? $recipient->region)
+                : null,
+        ]);
     }
 
     public function edit(Recipient $recipient)
     {
-        return view('recipients.edit', compact('recipient'));
+        return view('recipients.edit', [
+            'recipient' => $recipient,
+            'regionOptions' => $this->getRegionOptions(),
+        ]);
     }
 
     public function update(Request $request, Recipient $recipient)
     {
+        $regionKeys = array_keys($this->getRegionOptions());
+
         $validated = $request->validate([
             'qr_code' => 'nullable|string',
             'child_name' => 'required|string|max:255',
             'Ayah_name' => 'required|string|max:255',
             'Ibu_name' => 'required|string|max:255',
+            'whatsapp_number' => 'nullable|string|max:20',
             'birth_place' => 'required|string|max:255',
             'birth_date' => 'required|date',
-            'school_level' => 'required|string|max:255',
-            'school_name' => 'required|string|max:255',
+            'age' => 'required|integer|min:1|max:25',
             'address' => 'required|string',
+            'region' => ['nullable', Rule::in($regionKeys)],
+            'reference_source' => 'nullable|string|max:255',
             'class' => 'required|string|max:255',
             'shoe_size' => 'required|string|max:50',
             'shirt_size' => 'required|string|max:50',
@@ -87,9 +139,19 @@ class RecipientController extends Controller
             'bag_received' => 'nullable|boolean',
             'is_distributed' => 'nullable|boolean',
             'distributed_at' => 'nullable|date',
+            'has_circumcision' => 'nullable|boolean',
+            'has_received_gift' => 'nullable|boolean',
+            'has_photo_booth' => 'nullable|boolean',
+            'id_card_photo' => 'nullable|image|max:2048',
         ]);
 
-        $recipient->update($validated);
+        $data = $validated;
+        $data['school_level'] = 'N/A';
+        $data['school_name'] = 'N/A';
+        $data['id_card_photo_path'] = $this->storeIdCard($request->file('id_card_photo'), $recipient->id_card_photo_path);
+        unset($data['id_card_photo']);
+
+        $recipient->update($data);
 
         return redirect()
             ->route('recipients.index')
@@ -154,7 +216,7 @@ class RecipientController extends Controller
             'Nama'    => $recipient->child_name,
             'Ayah'    => $recipient->Ayah_name,
             'Ibu'     => $recipient->Ibu_name,
-            'Sekolah' => $recipient->school_name,
+            'Umur'    => $recipient->age ? $recipient->age . ' Tahun' : '-',
             'Kelas'   => $recipient->class,
         ];
         $y = 250;
@@ -237,7 +299,7 @@ class RecipientController extends Controller
                     'Nama'    => $recipient->child_name,
                     'Ayah'    => $recipient->Ayah_name,
                     'Ibu'     => $recipient->Ibu_name,
-                    'Sekolah' => $recipient->school_name,
+                    'Umur'    => $recipient->age ? $recipient->age . ' Tahun' : '-',
                     'Kelas'   => $recipient->class,
                 ];
                 $y = 250;
@@ -339,16 +401,33 @@ class RecipientController extends Controller
             ], 403);
         }
 
+        $validated = $request->validate([
+            'delivery_date' => 'required|date',
+            'notes' => 'nullable|string|max:500',
+            'registrasi' => 'nullable|boolean',
+            'has_circumcision' => 'nullable|boolean',
+            'has_received_gift' => 'nullable|boolean',
+            'has_photo_booth' => 'nullable|boolean',
+        ]);
+
         try {
+            $deliveredAt = Carbon::parse($validated['delivery_date'])
+                ->setTime(now()->format('H'), now()->format('i'));
+
             $recipient->update([
+                'registrasi' => true,
                 'is_distributed' => true,
-                'distributed_at' => now()
+                'distributed_at' => $deliveredAt,
+                'has_circumcision' => $request->boolean('has_circumcision'),
+                'has_received_gift' => $request->boolean('has_received_gift'),
+                'has_photo_booth' => $request->boolean('has_photo_booth'),
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Status penyaluran berhasil diperbarui',
-                'recipient_id' => $recipient->id
+                'recipient_id' => $recipient->id,
+                'distributed_at' => $recipient->distributed_at?->toDateTimeString(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -413,6 +492,24 @@ class RecipientController extends Controller
         } while (Recipient::where('qr_code', $qrCode)->exists());
 
         return $qrCode;
+    }
+
+    private function getRegionOptions(): array
+    {
+        return self::REGION_OPTIONS;
+    }
+
+    private function storeIdCard(?UploadedFile $file, ?string $previousPath = null): ?string
+    {
+        if (!$file) {
+            return $previousPath;
+        }
+
+        if ($previousPath && Storage::disk('public')->exists($previousPath)) {
+            Storage::disk('public')->delete($previousPath);
+        }
+
+        return $file->store('id-cards', 'public');
     }
 
     public function verifyQrRegistration(Request $request)

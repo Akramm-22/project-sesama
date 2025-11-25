@@ -35,6 +35,7 @@ class UserController extends Controller
     public function list()
     {
         $recipients = Recipient::paginate(20);
-        return view('pemantau.list', compact('recipients'));
+        $regionOptions = RecipientController::REGION_OPTIONS;
+        return view('pemantau.list', compact('recipients', 'regionOptions'));
     }
 }

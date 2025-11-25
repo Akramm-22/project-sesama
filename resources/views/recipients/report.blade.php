@@ -218,7 +218,7 @@
                     <th style="width: 20%;">Nama Anak</th>
                     <th style="width: 20%;">Nama Ayah</th>
                     <th style="width: 20%;">Nama Ibu</th>
-                    <th style="width: 15%;">Sekolah</th>
+                    <th style="width: 15%;">Umur</th>
                     <th style="width: 8%;">Kelas</th>
                 </tr>
             </thead>
@@ -230,7 +230,10 @@
                     <td class="text-left">{{ $recipient->child_name }}</td>
                     <td class="text-left">{{ $recipient->Ayah_name }}</td>
                     <td class="text-left">{{ $recipient->Ibu_name }}</td>
-                    <td class="text-left">{{ $recipient->school_name }}</td>
+                    @php
+                        $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
+                    @endphp
+                    <td class="text-left">{{ $displayAge ? $displayAge . ' Tahun' : '-' }}</td>
                     <td>{{ $recipient->class }}</td>
                 </tr>
                 @endforeach

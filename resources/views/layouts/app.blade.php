@@ -128,9 +128,15 @@
 </head>
 
 <body class="bg-light">
+    @php
+        $resolvedSidebar = $sidebarPartial
+            ?? (Auth::check() && Auth::user()->role === 'user'
+                ? 'partials.usersidebar'
+                : 'partials.sidebar');
+    @endphp
     <!-- Sidebar (desktop) -->
     <nav class="sidebar">
-        @include('partials.sidebar')
+        @include($resolvedSidebar)
     </nav>
 
     <!-- Mobile Navbar -->
@@ -148,7 +154,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body p-0">
-            @include('partials.sidebar')
+            @include($resolvedSidebar)
         </div>
     </div>
 
@@ -179,6 +185,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @stack('scripts')
 </body>
 <script>function showPopup(type, message) {
     Swal.fire({

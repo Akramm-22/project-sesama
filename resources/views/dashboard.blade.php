@@ -346,7 +346,7 @@
 <div class="banner-section mb-4">
     <div class="row align-items-center">
         <div class="col-md-8">
-            <h2 class="fw-bold mb-2">Program Khitan Gratis 2025</h2>
+            <h2 class="fw-bold mb-2">Program Khitan Ceria 2025</h2>
             <p class="mb-0">Kolaborasi Bazma dan Pertamina untuk mewujudkan pendidikan dan kesehatan anak Indonesia yang lebih baik</p>
         </div>
         <div class="col-md-4 text-end">
@@ -444,7 +444,7 @@
                 <h5 class="mb-0 fw-bold" style="color:#00c853;">Tentang Program</h5>
             </div>
             <p class="text-muted mb-2">
-                Program Khitan Gratis merupakan bentuk kepedulian Bazma dan Pertamina dalam mendukung kesehatan dan kesejahteraan anak-anak Indonesia.
+                Program Khitan Ceria merupakan bentuk kepedulian Bazma dan Pertamina dalam mendukung kesehatan dan kesejahteraan anak-anak Indonesia.
             </p>
             <ul class="text-muted" style="font-size:14px;">
                 <li>Pelayanan khitan gratis untuk anak kurang mampu</li>

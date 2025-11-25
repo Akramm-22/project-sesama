@@ -57,6 +57,10 @@
     border: 1px solid #e2e8f0;
 }
 
+.filter-select {
+    min-width: 200px;
+}
+
 /* Search Box */
 .search-wrapper {
     position: relative;
@@ -173,6 +177,11 @@
     background: #f8fafc;
 }
 
+.id-card-link {
+    font-size: 12px;
+    letter-spacing: 0.03em;
+}
+
 /* Status Badge */
 .status-badge {
     padding: 6px 12px;
@@ -188,6 +197,26 @@
 .status-registered { background: #fef3c7; color: #92400e; }
 .status-pending { background: #fee2e2; color: #991b1b; }
 
+.status-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+}
+
+.status-chip.success {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.status-chip.pending {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
 /* Responsive fixes */
 @media (max-width: 768px) {
     .action-buttons {
@@ -196,11 +225,17 @@
     .search-wrapper {
         max-width: 100%;
     }
+    .filter-select {
+        min-width: 100%;
+    }
     .data-table {
         padding: 20px;
     }
     .table th, .table td {
         font-size: 13px;
+    }
+    .region-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -223,6 +258,14 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
+                <select name="region" class="form-select filter-select" onchange="this.form.submit()">
+                    <option value="">Semua Wilayah</option>
+                    @foreach($regionOptions as $key => $label)
+                        <option value="{{ $key }}" {{ ($regionFilter ?? '') === $key ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
             </form>
         </div>
 
@@ -233,6 +276,9 @@
                 </a>
                 <a href="{{ route('recipients.printAll') }}" class="btn btn-info btn-custom text-white">
                     <i class="fas fa-download me-2"></i>Download QR
+                </a>
+                <a href="{{ route('recipients.create') }}" class="btn btn-primary btn-custom">
+                    <i class="fas fa-pen-nib me-2"></i>Tambah Data Manual
                 </a>
             </div>
         </div>
@@ -248,9 +294,10 @@
                     <th>QR Code</th>
                     <th>Nama Anak</th>
                     <th>Nama Ayah</th>
-                    <th>Nama Ibu</th>
-                    <th>Sekolah</th>
-                    <th>Kelas</th>
+                    <th>Umur</th>
+                    <th>Alamat</th>
+                    <th>Referensi</th>
+                    <th>Foto ID Card</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -259,15 +306,51 @@
                 @forelse($recipients as $recipient)
                     <tr>
                         <td><span class="badge bg-primary">{{ $recipient->qr_code }}</span></td>
-                        <td>{{ $recipient->child_name }}</td>
+                        <td>
+                            <div class="fw-semibold">{{ $recipient->child_name }}</div>
+                            @php
+                                $regionLabel = $recipient->region
+                                    ? ($regionOptions[$recipient->region] ?? $recipient->region)
+                                    : null;
+                            @endphp
+                            @if($regionLabel)
+                                <span class="region-badge mt-1">
+                                    <i class="fas fa-map-marker-alt"></i> {{ $regionLabel }}
+                                </span>
+                            @endif
+                        </td>
                         <td>{{ $recipient->Ayah_name }}</td>
-                        <td>{{ $recipient->Ibu_name }}</td>
-                        <td>{{ $recipient->school_name }}</td>
-                        <td>{{ $recipient->class }}</td>
+                        @php
+                            $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
+                        @endphp
+                        <td>{{ $displayAge ? $displayAge . ' th' : '-' }}</td>
+                        <td>
+                            {{ \Illuminate\Support\Str::limit($recipient->address, 60) }}
+                        </td>
+                        <td>
+                            @if($recipient->reference_source)
+                                <span class="badge bg-secondary-subtle text-secondary">
+                                    {{ $recipient->reference_source }}
+                                </span>
+                            @else
+                                <span class="text-muted small">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($recipient->id_card_photo_path)
+                                <a href="{{ asset('storage/' . $recipient->id_card_photo_path) }}"
+                                   target="_blank"
+                                   class="btn btn-sm btn-outline-primary id-card-link">
+                                    <i class="fas fa-id-card me-1"></i> Lihat
+                                </a>
+                            @else
+                                <span class="text-muted small">Belum ada</span>
+                            @endif
+                        </td>
                         <td>
                             @if ($recipient->is_distributed && $recipient->registrasi)
                                 <span class="status-badge status-completed">
-                                    <i class="fas fa-check-circle"></i> Completed
+                                    <i class="fas fa-check-circle"></i> Penyaluran selesai
                                 </span>
                             @elseif ($recipient->registrasi && !$recipient->is_distributed)
                                 <span class="status-badge status-registered">
