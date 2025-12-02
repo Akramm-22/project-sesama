@@ -68,7 +68,7 @@ class RecipientController extends Controller
             'whatsapp_number' => 'nullable|string|max:20',
             'birth_place' => 'required|string|max:255',
             'birth_date' => 'required|date',
-            'age' => 'required|integer|min:1|max:25',
+            'date_of_birth' => 'required|date',
             'address' => 'required|string',
             'region' => ['nullable', Rule::in($regionKeys)],
             'reference_source' => 'nullable|string|max:255',
@@ -127,7 +127,7 @@ class RecipientController extends Controller
             'whatsapp_number' => 'nullable|string|max:20',
             'birth_place' => 'required|string|max:255',
             'birth_date' => 'required|date',
-            'age' => 'required|integer|min:1|max:25',
+            'date_of_birth' => 'required|date',
             'address' => 'required|string',
             'region' => ['nullable', Rule::in($regionKeys)],
             'reference_source' => 'nullable|string|max:255',
@@ -216,7 +216,7 @@ class RecipientController extends Controller
             'Nama'    => $recipient->child_name,
             'Ayah'    => $recipient->Ayah_name,
             'Ibu'     => $recipient->Ibu_name,
-            'Umur'    => $recipient->age ? $recipient->age . ' Tahun' : '-',
+            'Tanggal Lahir' => $recipient->date_of_birth ?? '-',
             'Kelas'   => $recipient->class,
         ];
         $y = 250;
@@ -299,7 +299,7 @@ class RecipientController extends Controller
                     'Nama'    => $recipient->child_name,
                     'Ayah'    => $recipient->Ayah_name,
                     'Ibu'     => $recipient->Ibu_name,
-                    'Umur'    => $recipient->age ? $recipient->age . ' Tahun' : '-',
+                    'Tanggal Lahir' => $recipient->date_of_birth ?? '-',
                     'Kelas'   => $recipient->class,
                 ];
                 $y = 250;

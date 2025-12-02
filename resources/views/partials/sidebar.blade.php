@@ -31,7 +31,7 @@
             </li>
             <li class="nav-item mb-1">
                 <div class="dropdown w-100">
-                    <a class="nav-link d-flex justify-content-between align-items-center dropdown-toggle {{ request()->routeIs('recipients.*') ? 'active' : '' }}"
+                    <a class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('recipients.*') ? 'active' : '' }}"
                         href="{{ route('recipients.index') }}"
                         role="button"
                         data-bs-toggle="dropdown"
@@ -105,6 +105,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 15px;
         }
+        
     </style>
 
     <div class="d-flex flex-column align-items-center justify-content-center mb-3">

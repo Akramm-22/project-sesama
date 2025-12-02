@@ -96,25 +96,32 @@
                     <i class="fas fa-qrcode fa-2x text-white"></i>
                 </div>
                 <h4 class="mb-2">Scan QR Code</h4>
-                <p class="text-muted">Masukkan atau scan QR penerima bantuan</p>
+                <p class="text-muted">Pilih mode: pakai kamera atau masukkan manual</p>
             </div>
 
             <!-- FORM SCAN -->
             <form id="verifyForm">
-                @csrf
+    @csrf
 
-                <label class="form-label">Kode QR</label>
-                <input type="text" id="qr_code" name="qr_code"
-                       class="form-control mb-3"
-                       placeholder="Scan atau ketik kode QR di sini..."
-                       required>
+    <label class="form-label">Kode QR</label>
 
-                <div class="text-center">
-                    <button class="btn btn-primary btn-custom">
-                        <i class="fas fa-search me-2"></i> Verifikasi QR
-                    </button>
-                </div>
-            </form>
+    <input type="text" id="qr_code" name="qr_code"
+           class="form-control"
+           placeholder="Scan atau ketik kode QR di sini..."
+           required>
+
+    <small class="form-text text-muted d-block mt-1">
+        <i class="fas fa-info-circle me-1"></i>
+        Gunakan scanner atau ketik manual kode QR
+    </small>
+
+    <div class="text-center mt-3">
+        <button class="btn btn-primary btn-custom">
+            <i class="fas fa-search me-2"></i> Verifikasi QR
+        </button>
+    </div>
+</form>
+
 
             <!-- RESULT -->
             <div id="result" class="mt-4" style="display:none;">

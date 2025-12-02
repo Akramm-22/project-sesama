@@ -1,4 +1,4 @@
-<!doctype html>
+{{-- <!doctype html>
 <html lang="id">
 <head>
   <meta charset="utf-8">
@@ -476,4 +476,4 @@
     });
   </script>
 </body>
-</html>
+</html> --}}

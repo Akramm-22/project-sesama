@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'yusuf',
             'email' => 'yusuf@bansos.com',
-            'role' => 'admin', // default user biasa
+            'role' => 'admin', // Tampilan admin
             'password' => Hash::make('yusufganteng'),
         ]);
 

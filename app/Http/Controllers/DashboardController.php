@@ -58,4 +58,4 @@ class DashboardController extends Controller
             'recentDistributions'
         ));
     }
-}
+} 

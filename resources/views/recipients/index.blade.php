@@ -294,7 +294,7 @@
                     <th>QR Code</th>
                     <th>Nama Anak</th>
                     <th>Nama Ayah</th>
-                    <th>Umur</th>
+                    <th>Tanggal Lahir</th>
                     <th>Alamat</th>
                     <th>Referensi</th>
                     <th>Foto ID Card</th>
