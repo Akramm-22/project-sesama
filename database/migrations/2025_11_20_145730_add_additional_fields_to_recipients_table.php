@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('whatsapp_number')->nullable()->after('Ibu_name');
             $table->string('region')->nullable()->after('address');
             $table->string('reference_source')->nullable()->after('region');
-            $table->string('id_card_photo_path')->nullable()->after('reference_source');
 
             $table->boolean('has_circumcision')->default(false)->after('registrasi');
             $table->boolean('has_received_gift')->default(false)->after('has_circumcision');
@@ -33,7 +32,7 @@ return new class extends Migration
                 'whatsapp_number',
                 'region',
                 'reference_source',
-                'id_card_photo_path',
+
                 'has_circumcision',
                 'has_received_gift',
                 'has_photo_booth',

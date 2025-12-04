@@ -16,15 +16,16 @@ use ZipArchive;
 class RecipientController extends Controller
 {
     public const REGION_OPTIONS = [
-        'wilayah_1' => 'Wilayah 1 - RW 01',
-        'wilayah_2' => 'Wilayah 2 - RW 02',
-        'wilayah_3' => 'Wilayah 3 - RW 03',
-        'wilayah_4' => 'Wilayah 4 - RW 04',
-        'wilayah_5' => 'Wilayah 5 - RW 05',
-        'wilayah_6' => 'Wilayah 6 - RW 06',
-        'wilayah_7' => 'Wilayah 7 - RW 07',
-        'wilayah_8' => 'Wilayah 8 - RW 08',
-        'wilayah_9' => 'Wilayah 9 - RW 09',
+   'Klojen'        => 'Klojen',
+'Lowokwaru'     => 'Lowokwaru',
+'Sukun'         => 'Sukun',
+'Blimbing'      => 'Blimbing',
+'Kedungkandang' => 'Kedungkandang',
+'Dinoyo'        => 'Dinoyo',
+'Sumbersari'    => 'Sumbersari',
+'Sawojajar'     => 'Sawojajar',
+'Tlogomas'      => 'Tlogomas',
+
     ];
 
 
@@ -66,16 +67,12 @@ class RecipientController extends Controller
             'Ayah_name' => 'required|string|max:255',
             'Ibu_name' => 'required|string|max:255',
             'whatsapp_number' => 'nullable|string|max:20',
-            'birth_place' => 'required|string|max:255',
+
             'birth_date' => 'required|date',
-            'date_of_birth' => 'required|date',
+
             'address' => 'required|string',
             'region' => ['nullable', Rule::in($regionKeys)],
             'reference_source' => 'nullable|string|max:255',
-            'class' => 'required|string|max:255',
-            'shoe_size' => 'required|string|max:10',
-            'shirt_size' => 'required|string|max:10',
-            'id_card_photo' => 'nullable|image|max:2048',
         ]);
 
         // Generate unique QR code
@@ -85,11 +82,6 @@ class RecipientController extends Controller
             'qr_code' => $qrCode,
         ]);
 
-        $data['school_level'] = 'N/A';
-        $data['school_name'] = 'N/A';
-
-        $data['id_card_photo_path'] = $this->storeIdCard($request->file('id_card_photo'));
-        unset($data['id_card_photo']);
 
         $recipient = Recipient::create($data);
 
@@ -125,31 +117,20 @@ class RecipientController extends Controller
             'Ayah_name' => 'required|string|max:255',
             'Ibu_name' => 'required|string|max:255',
             'whatsapp_number' => 'nullable|string|max:20',
-            'birth_place' => 'required|string|max:255',
+
             'birth_date' => 'required|date',
-            'date_of_birth' => 'required|date',
+
             'address' => 'required|string',
             'region' => ['nullable', Rule::in($regionKeys)],
             'reference_source' => 'nullable|string|max:255',
-            'class' => 'required|string|max:255',
-            'shoe_size' => 'required|string|max:50',
-            'shirt_size' => 'required|string|max:50',
-            'uniform_received' => 'nullable|boolean',
-            'shoes_received' => 'nullable|boolean',
-            'bag_received' => 'nullable|boolean',
             'is_distributed' => 'nullable|boolean',
             'distributed_at' => 'nullable|date',
             'has_circumcision' => 'nullable|boolean',
             'has_received_gift' => 'nullable|boolean',
             'has_photo_booth' => 'nullable|boolean',
-            'id_card_photo' => 'nullable|image|max:2048',
         ]);
 
         $data = $validated;
-        $data['school_level'] = 'N/A';
-        $data['school_name'] = 'N/A';
-        $data['id_card_photo_path'] = $this->storeIdCard($request->file('id_card_photo'), $recipient->id_card_photo_path);
-        unset($data['id_card_photo']);
 
         $recipient->update($data);
 
@@ -216,8 +197,8 @@ class RecipientController extends Controller
             'Nama'    => $recipient->child_name,
             'Ayah'    => $recipient->Ayah_name,
             'Ibu'     => $recipient->Ibu_name,
-            'Tanggal Lahir' => $recipient->date_of_birth ?? '-',
-            'Kelas'   => $recipient->class,
+            'Tanggal Lahir' => $recipient->birth_date ?? '-',
+
         ];
         $y = 250;
         foreach ($info as $label => $value) {
@@ -299,8 +280,8 @@ class RecipientController extends Controller
                     'Nama'    => $recipient->child_name,
                     'Ayah'    => $recipient->Ayah_name,
                     'Ibu'     => $recipient->Ibu_name,
-                    'Tanggal Lahir' => $recipient->date_of_birth ?? '-',
-                    'Kelas'   => $recipient->class,
+                    'Tanggal Lahir' => $recipient->birth_date ?? '-',
+
                 ];
                 $y = 250;
                 foreach ($info as $label => $value) {
@@ -343,46 +324,47 @@ class RecipientController extends Controller
         return view('recipients.scan');
     }
 
-    public function verifyQr(Request $request)
-    {
-        $request->validate([
-            'qr_code' => 'required|string'
-        ]);
+   public function verifyQr(Request $request)
+{
+    $request->validate([
+        'qr_code' => 'required|string'
+    ]);
 
-        try {
-            $qrInput = $request->qr_code;
+    $recipient = Recipient::where('qr_code', $request->qr_code)->first();
 
-            $recipient = Recipient::where('qr_code', $qrInput)->first();
-
-            if (!$recipient) {
-                return response()->json(['error' => 'QR Code tidak ditemukan'], 404);
-            }
-
-            // BELUM REGISTRASI
-            if (!$recipient->registrasi) {
-                return response()->json([
-                    'error' => 'Penerima belum registrasi'
-                ], 403);
-            }
-
-            // SUDAH PERNAH DISTRIBUSI
-            if ($recipient->is_distributed) {
-                return response()->json([
-                    'error' => 'Penerima sudah menerima bantuan (tidak boleh ambil dua kali)'
-                ], 403);
-            }
-
-            return response()->json([
-                'success' => true,
-                'recipient' => $recipient
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'QR Code tidak valid: ' . $e->getMessage()], 400);
-        }
+    if (!$recipient) {
+        return response()->json(['error' => 'QR Code tidak ditemukan'], 404);
     }
 
+    if (!$recipient->registrasi) {
+        return response()->json([
+            'error' => 'Penerima belum registrasi'
+        ], 403);
+    }
 
+    if ($recipient->is_distributed) {
+        return response()->json([
+            'error' => 'Penerima sudah menerima bantuan'
+        ], 403);
+    }
 
+    return response()->json([
+        'success' => true,
+        'recipient' => [
+            'id' => $recipient->id,
+            'qr_code' => $recipient->qr_code,
+
+            'child_name' => $recipient->child_name,
+            'Ayah_name' => $recipient->Ayah_name,
+            'Ibu_name' => $recipient->Ibu_name,
+
+            'registrasi' => (bool)$recipient->registrasi,
+            'has_circumcision' => (bool)$recipient->has_circumcision,
+            'has_received_gift' => (bool)$recipient->has_received_gift,
+            'has_photo_booth' => (bool)$recipient->has_photo_booth,
+        ]
+    ]);
+}
 
 
     public function distribute(Request $request, Recipient $recipient)
@@ -401,14 +383,11 @@ class RecipientController extends Controller
             ], 403);
         }
 
-        $validated = $request->validate([
-            'delivery_date' => 'required|date',
-            'notes' => 'nullable|string|max:500',
-            'registrasi' => 'nullable|boolean',
-            'has_circumcision' => 'nullable|boolean',
-            'has_received_gift' => 'nullable|boolean',
-            'has_photo_booth' => 'nullable|boolean',
-        ]);
+    $validated = $request->validate([
+    'delivery_date' => 'required|date',
+    'notes' => 'nullable|string|max:500',
+]);
+
 
         try {
             $deliveredAt = Carbon::parse($validated['delivery_date'])
@@ -421,6 +400,7 @@ class RecipientController extends Controller
                 'has_circumcision' => $request->boolean('has_circumcision'),
                 'has_received_gift' => $request->boolean('has_received_gift'),
                 'has_photo_booth' => $request->boolean('has_photo_booth'),
+                 'notes' => $validated['notes'] ?? null,
             ]);
 
             return response()->json([
@@ -546,6 +526,20 @@ class RecipientController extends Controller
             return response()->json(['error' => 'QR Code tidak valid: ' . $e->getMessage()], 400);
         }
     }
+
+    // =======================
+    // status penyaluran pdf download
+
+    public function exportDistribution(Recipient $recipient)
+{
+    $pdf = Pdf::loadView('recipients.pdf.distribution', [
+        'recipient' => $recipient
+    ])->setPaper('A4', 'portrait');
+
+    return $pdf->download('Informasi-Penyaluran-'.$recipient->qr_code.'.pdf');
+}
+
+// status penyaluran
 
     public function markRegistered(Request $request)
     {

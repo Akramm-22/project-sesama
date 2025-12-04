@@ -17,18 +17,8 @@ return new class extends Migration
             $table->string('child_name');
             $table->string('Ayah_name');
             $table->string('Ibu_name');
-            $table->string('birth_place');
             $table->date('birth_date');
-            $table->unsignedTinyInteger('age')->nullable();
-            $table->string('school_level');
-            $table->string('school_name');
             $table->text('address');
-            $table->string('class');
-            $table->string('shoe_size');
-            $table->string('shirt_size');
-            $table->boolean('uniform_received')->default(false);
-            $table->boolean('shoes_received')->default(false);
-            $table->boolean('bag_received')->default(false);
             $table->boolean('is_distributed')->default(false);
             $table->timestamp('distributed_at')->nullable();
             $table->timestamps();
@@ -43,4 +33,3 @@ return new class extends Migration
         Schema::dropIfExists('recipients');
     }
 };
-    

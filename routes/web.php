@@ -12,11 +12,10 @@ Auth::routes();
 
 // =======================
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('dashboard');
-    }
-    return view('landing');
-})->name('landing');
+    return redirect()->route('login');
+});
+
+
 
 // =======================
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -47,6 +46,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/registration/verify', [RegistrationController::class, 'verifyRegistrationQr'])->name('registration.verify');
     Route::post('/registration/confirm', [RegistrationController::class, 'confirmRegistration'])->name('registration.confirm');
 });
+
+// ===========================
+    // export pdf status penyaluran
+    
+    Route::get('/recipients/{recipient}/export-distribution',
+    [RecipientController::class, 'exportDistribution'])
+    ->name('recipients.export-distribution');
+
+    // status penyaluran
 
 // =======================
 Route::middleware(['auth', 'user'])->group(function () {

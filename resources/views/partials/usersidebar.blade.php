@@ -1,4 +1,4 @@
-@php($currentUser = Auth::user())
+    @php($currentUser = Auth::user())
 
 @php
     $regionMenuOptions = \App\Http\Controllers\RecipientController::REGION_OPTIONS;

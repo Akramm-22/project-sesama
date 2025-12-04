@@ -183,19 +183,60 @@
 }
 
 /* Status Badge */
+/* === STATUS BADGE: FIX WRAP + RESPONSIVE === */
+/* === STATUS BADGE PREMIUM === */
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.82rem;
-    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+
+    padding: 6px 14px;
+    border-radius: 999px;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+    line-height: 1.2;
+
+    /* ✨ SHADOW lembut */
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+
+    /* ✨ animasi smooth */
+    transition: all .18s ease;
 }
 
-.status-completed { background: #dcfce7; color: #166534; }
-.status-registered { background: #fef3c7; color: #92400e; }
-.status-pending { background: #fee2e2; color: #991b1b; }
+/* hover / tap anim */
+.status-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,.12);
+}
+
+/* icon fix */
+.status-badge i {
+    font-size: 0.85rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* WARNA STATUS */
+.status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-registered {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-pending {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
 
 .status-chip {
     font-size: 11px;
@@ -297,7 +338,7 @@
                     <th>Tanggal Lahir</th>
                     <th>Alamat</th>
                     <th>Referensi</th>
-                    <th>Foto ID Card</th>
+
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -320,10 +361,8 @@
                             @endif
                         </td>
                         <td>{{ $recipient->Ayah_name }}</td>
-                        @php
-                            $displayAge = $recipient->age ?? optional($recipient->birth_date)->age;
-                        @endphp
-                        <td>{{ $displayAge ? $displayAge . ' th' : '-' }}</td>
+                       <td>{{ $recipient->birth_date ? \Carbon\Carbon::parse($recipient->birth_date)->format('d M Y') : '-' }}</td>
+
                         <td>
                             {{ \Illuminate\Support\Str::limit($recipient->address, 60) }}
                         </td>
@@ -336,30 +375,26 @@
                                 <span class="text-muted small">-</span>
                             @endif
                         </td>
-                        <td>
-                            @if($recipient->id_card_photo_path)
-                                <a href="{{ asset('storage/' . $recipient->id_card_photo_path) }}"
-                                   target="_blank"
-                                   class="btn btn-sm btn-outline-primary id-card-link">
-                                    <i class="fas fa-id-card me-1"></i> Lihat
-                                </a>
-                            @else
-                                <span class="text-muted small">Belum ada</span>
-                            @endif
-                        </td>
+
                         <td>
                             @if ($recipient->is_distributed && $recipient->registrasi)
-                                <span class="status-badge status-completed">
-                                    <i class="fas fa-check-circle"></i> Penyaluran selesai
+                                <span class="status-badge status-completed"
+                                    title="Bantuan sudah disalurkan ke penerima">
+                                        <i class="fas fa-check-circle"></i> Penyaluran selesai
                                 </span>
+
                             @elseif ($recipient->registrasi && !$recipient->is_distributed)
-                                <span class="status-badge status-registered">
-                                    <i class="fas fa-check"></i> Sudah registrasi
-                                </span>
+                                <span class="status-badge status-registered"
+                                     title="Penerima sudah diverifikasi dan tercatat registrasi">
+                                        <i class="fas fa-check"></i> Sudah registrasi
+                                 </span>
+
                             @else
-                                <span class="status-badge status-pending">
-                                    <i class="fas fa-times"></i> Belum registrasi
+                                <span class="status-badge status-pending"
+                                     title="Penerima belum melakukan proses registrasi">
+                                        <i class="fas fa-times"></i> Belum registrasi
                                 </span>
+
                             @endif
                         </td>
                         <td>

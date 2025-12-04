@@ -31,7 +31,7 @@
             </li>
             <li class="nav-item mb-1">
                 <div class="dropdown w-100">
-                    <a class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('recipients.*') ? 'active' : '' }}"
+                    <a class="nav-link d-flex justify-content-between align-items-center {{ request()->routeIs('recipients.*') ? 'open' : '' }}"
                         href="{{ route('recipients.index') }}"
                         role="button"
                         data-bs-toggle="dropdown"
@@ -73,7 +73,7 @@
    <div class="sidebar-footer mt-auto pt-3 text-center">
     <style>
         .footer-logo {
-            height: 40px;         
+            height: 40px;
             width: auto;
             max-width: 100%;
             object-fit: contain;
@@ -105,7 +105,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 15px;
         }
-        
+
     </style>
 
     <div class="d-flex flex-column align-items-center justify-content-center mb-3">
@@ -169,4 +169,55 @@
     background: rgba(37, 99, 235, 0.1);
     color: #0f172a;
 }
+
+/* ===============================
+    FIX SIDEBAR ACTIVE & HOVER
+================================ */
+
+/* default text */
+.sidebar .nav-link {
+    color: rgba(255,255,255,0.85);
+    transition: all .18s ease;
+}
+
+/* ===============================
+   ✅ ACTIVE MENU
+================================ */
+.sidebar .nav-link.active {
+    background: #ffffff !important;
+    color: #2563eb !important;
+}
+
+/* ===============================
+   ✅ HOVER MENU
+================================ */
+.sidebar .nav-link:hover {
+    background: #ffffff !important;
+    color: #2563eb !important;
+}
+
+/* ===============================
+   Icon warna ikut berubah
+================================ */
+.sidebar .nav-link.active i,
+.sidebar .nav-link:hover i {
+    color: #2563eb !important;
+}
+
+
+/* Parent dropdown ketika open */
+.nav-link.open {
+    color: white !important;
+    background: transparent !important;
+    font-weight: unset !important;
+}
+
+
+
+/* Child menu yang benar-benar active   */
+.nav-link.active {
+    background: #ffffff !important;
+    color: var(--primary-blue) !important;
+}
+
 </style>

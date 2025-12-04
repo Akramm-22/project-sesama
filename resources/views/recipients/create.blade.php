@@ -111,16 +111,7 @@
                                 @enderror
                             </div>
 
-                            {{-- Foto ID Card --}}
-                            <div class="mb-3">
-                                <label for="id_card_photo" class="form-label">Foto ID Card</label>
-                                <input type="file" class="form-control @error('id_card_photo') is-invalid @enderror"
-                                       id="id_card_photo" name="id_card_photo" accept="image/*">
-                                <small class="text-muted">Format JPG/PNG maks. 2MB</small>
-                                @error('id_card_photo')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+
 
                         </div> {{-- col-lg-4 --}}
                     </div> {{-- row --}}
@@ -132,7 +123,7 @@
                         </a>
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save me-2"></i>Simpan Data
-                            @csrf
+                         
                         </button>
                     </div>
 

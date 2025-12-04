@@ -13,9 +13,7 @@ class DashboardController extends Controller
         $distributedCount = Recipient::where('is_distributed', true)->count();
         $pendingCount = $totalRecipients - $distributedCount;
 
-        $uniformCount = Recipient::where('uniform_received', true)->count();
-        $shoesCount = Recipient::where('shoes_received', true)->count();
-        $bagCount = Recipient::where('bag_received', true)->count();
+
 
         $recentDistributions = Recipient::where('is_distributed', true)
             ->orderBy('distributed_at', 'desc')
@@ -26,9 +24,6 @@ class DashboardController extends Controller
             'totalRecipients',
             'distributedCount',
             'pendingCount',
-            'uniformCount',
-            'shoesCount',
-            'bagCount',
             'recentDistributions'
         ));
     }
@@ -39,10 +34,6 @@ class DashboardController extends Controller
         $distributedCount = Recipient::where('is_distributed', true)->count();
         $pendingCount = $totalRecipients - $distributedCount;
 
-        $uniformCount = Recipient::where('uniform_received', true)->count();
-        $shoesCount = Recipient::where('shoes_received', true)->count();
-        $bagCount = Recipient::where('bag_received', true)->count();
-
         $recentDistributions = Recipient::where('is_distributed', true)
             ->orderBy('distributed_at', 'desc')
             ->limit(10)
@@ -52,10 +43,7 @@ class DashboardController extends Controller
             'totalRecipients',
             'distributedCount',
             'pendingCount',
-            'uniformCount',
-            'shoesCount',
-            'bagCount',
             'recentDistributions'
         ));
     }
-} 
+}
