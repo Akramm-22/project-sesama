@@ -337,7 +337,7 @@
         e.preventDefault();
 
         const formData = new FormData(this);
-        fetch("{{ route('recipients.verify-qr') }}", {
+        fetch("https://sesama-baru.smktibazma.com/recipients/verify-qr", {
             method: "POST",
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
@@ -390,7 +390,7 @@
         e.preventDefault();
 
         const id = document.getElementById('recipient_id').value;
-        const targetUrl = this.action || `/recipients/${id}/distribute`;
+        const targetUrl = this.action || `https://sesama-baru.smktibazma.com/recipients/${id}/distribute`;
         const formData = new FormData(this);
 
         fetch(targetUrl, {

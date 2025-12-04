@@ -392,7 +392,7 @@
             fd.append('qr_code', qrCode);
 
 
-            fetch('{{ url('/registration/verify') }}', {
+            fetch('https://sesama-baru.smktibazma.com/registration/verify', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -452,7 +452,7 @@
             }
 
 
-            fetch('{{ url('/registration/confirm') }}', {
+            fetch('https://sesama-baru.smktibazma.com/registration/confirm', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
