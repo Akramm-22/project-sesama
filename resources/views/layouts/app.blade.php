@@ -124,6 +124,152 @@
             background: var(--primary-blue);
             color: white;
         }
+
+
+/* -------- GLOBAL SHADOW SOFT -------- */
+.soft-shadow {
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+/* -------- SIDEBAR DESKTOP -------- */
+.sidebar {
+    background: linear-gradient(160deg,#1e3a8a,#2563eb);
+}
+
+.sidebar .nav-link {
+    letter-spacing:.03em;
+    font-size:14px;
+}
+
+.sidebar .nav-link i{
+    width:20px;
+    opacity:.95;
+}
+
+/* -------- ACTIVE + HOVER SMOOTH -------- */
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active{
+    background:rgba(255,255,255,.95);
+    color:#1e40af!important;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+/* -------- MAIN CONTENT -------- */
+.main-content{
+    background: linear-gradient(180deg,#ffffff,#f8fafc);
+    padding: 30px;
+}
+
+/* Title */
+main h1{
+    letter-spacing:.02em;
+}
+
+/* -------- MOBILE HEADER -------- */
+.d-md-none{
+    background: linear-gradient(135deg,#1e40af,#2563eb);
+    padding:12px 16px !important;
+    box-shadow:0 4px 18px rgba(0,0,0,.18);
+}
+
+.d-md-none span{
+    font-weight:600;
+    letter-spacing:.08em;
+}
+
+/* Burger button */
+.d-md-none .btn{
+    border-radius:12px;
+    padding:6px 10px;
+}
+
+/* -------- MOBILE OFFCANVAS SIDEBAR -------- */
+.sidebar-mobile.offcanvas{
+    background:linear-gradient(160deg,#1e3a8a,#2563eb)!important;
+    box-shadow:8px 0 18px rgba(0,0,0,.2);
+}
+
+.sidebar-mobile .nav-link{
+    padding:14px 18px!important;
+    border-radius:14px;
+    margin:6px 10px;
+    font-size:14px;
+}
+
+/* -------- MOBILE ACTIVE -------- */
+.sidebar-mobile .nav-link.active{
+    background:#ffffff!important;
+    color:#2563eb!important;
+}
+
+/* -------- DROPDOWN -------- */
+.sidebar-mobile .dropdown-menu{
+    border-radius:14px;
+    padding:8px!important;
+}
+
+/* -------- BUTTONS -------- */
+.btn{
+    border-radius:12px!important;
+}
+
+.btn-primary{
+    background: linear-gradient(135deg,#2563eb,#1e40af)!important;
+}
+
+.btn-primary:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.18);
+}
+
+/* -------- TABLE -------- */
+.table{
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.table thead th{
+    font-size:13px;
+    text-transform:uppercase;
+}
+
+.table tbody tr{
+    transition:.15s ease;
+}
+
+.table tbody tr:hover{
+    background:#eef2ff;
+}
+
+/* -------- ALERT -------- */
+.alert{
+    border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+/* -------- SCROLLBAR -------- */
+::-webkit-scrollbar{
+    width:8px;
+}
+::-webkit-scrollbar-thumb{
+    background:#93c5fd;
+    border-radius:999px;
+}
+
+/* -------- MOBILE TWEAK -------- */
+@media(max-width:768px){
+    .main-content{
+        padding:16px!important;
+    }
+
+    main h1{
+        font-size:18px;
+    }
+
+    .alert{
+        font-size:13px;
+    }
+}
+
     </style>
 </head>
 
@@ -144,7 +290,7 @@
         <button class="btn btn-light btn-sm" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
             <i class="fas fa-bars"></i>
         </button>
-        <span>{{ config('Bansos', 'Berbagi Asa') }}</span>
+        <span>{{ config('Bansos', 'Khitan Ceria') }}</span>
     </div>
 
     <!-- Sidebar mobile -->

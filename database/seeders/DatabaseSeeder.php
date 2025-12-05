@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Recipient;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -14,15 +13,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
+        $regions = [
+            'Dumai',
+            'Cilacap',
+            'Cirebon',
+            'Plaju',
+            'Pertamina Retail',
+            'Pertamina EP',
+            'Balikpapan',
+            'Prabumulih',
+            'Balongan',
+            'Bazma Pusat',
+        ];
 
-        User::create([
-            'name' => 'yusuf',
-            'email' => 'yusuf@bansos.com',
-            'role' => 'admin', // Tampilan admin
-            'password' => Hash::make('yusufganteng'),
-        ]);
+        $defaultPassword = Hash::make('admin123');
 
+        foreach ($regions as $region) {
 
+            for ($i = 1; $i <= 3; $i++) {
+
+                $slug = strtolower(str_replace(' ', '', $region));
+
+                User::create([
+                    'name' => "Admin {$region} {$i}",
+                    'email' => "{$slug}{$i}@bansos.com",
+                    'role' => 'admin',
+                    'password' => $defaultPassword,
+                ]);
+
+            }
+        }
     }
 }

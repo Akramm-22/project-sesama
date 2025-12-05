@@ -143,6 +143,122 @@
                 display: none;
             }
         }
+        /* ======================================================
+   ✨ PREMIUM LOGIN POLISH (FINAL FINISHING)
+======================================================*/
+
+/* Glow brand background effect */
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at 15% 20%,
+            rgba(255,255,255,.08),
+            transparent 40%),
+        radial-gradient(circle at 80% 65%,
+            rgba(59,130,246,.15),
+            transparent 45%);
+    pointer-events:none;
+}
+
+/* Floating login card */
+.login-wrapper{
+    background: linear-gradient(180deg,#ffffff,#f9fafb);
+    box-shadow:
+        0 25px 55px rgba(0,0,0,.25),
+        0 8px 18px rgba(0,0,0,.12);
+}
+
+/* Logo depth */
+.login-left img{
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,.2));
+}
+
+/* Subtitle refine */
+.login-subtitle{
+    opacity:.75;
+    letter-spacing:.04em;
+}
+
+/* Inputs */
+.form-control{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.form-control:focus{
+    background: white;
+    border-color:#2563eb;
+}
+
+/* Input icon spacing fix */
+.input-group-text{
+    left:16px;
+}
+.form-control{
+    padding-left:48px;
+}
+
+/* Soft input hover */
+.form-control:hover{
+    background:#ffffff;
+}
+
+/* Login button premium */
+.btn-login{
+    background: linear-gradient(135deg,#133E87,#2563eb);
+    letter-spacing:.08em;
+}
+
+.btn-login:hover{
+    background: linear-gradient(135deg,#09255c,#133E87);
+}
+
+/* Right illustration glow */
+.login-right img{
+    position:relative;
+}
+.login-right img::after{
+    content:"";
+}
+
+/* ================
+   MOBILE UPGRADE
+================ */
+@media (max-width: 768px){
+    body{
+        background: linear-gradient(155deg,#0e3382,#09255c);
+    }
+
+    .login-wrapper{
+        border-radius:18px;
+    }
+
+    .login-left{
+        padding:36px 30px;
+    }
+
+    .login-title{
+        font-size:20px;
+    }
+
+    .login-subtitle{
+        font-size:13px;
+    }
+
+    .btn-login{
+        height:52px;
+        font-size:15px;
+        letter-spacing:.06em;
+    }
+}
+
+/* Tap micro interaction */
+.btn-login:active{
+    transform:scale(.98);
+}
+
     </style>
 
 

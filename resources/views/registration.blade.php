@@ -112,6 +112,19 @@
                 width: 70px;
                 height: 70px;
             }
+         
+@media (max-width:576px){
+
+    #btnCamera{
+        margin-bottom:12px !important;
+    }
+
+    #btnManual{
+        margin-top:4px !important;
+    }
+
+}
+
         }
 
 

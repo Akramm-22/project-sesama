@@ -16,15 +16,16 @@ use ZipArchive;
 class RecipientController extends Controller
 {
     public const REGION_OPTIONS = [
-   'Klojen'        => 'Klojen',
-'Lowokwaru'     => 'Lowokwaru',
-'Sukun'         => 'Sukun',
-'Blimbing'      => 'Blimbing',
-'Kedungkandang' => 'Kedungkandang',
-'Dinoyo'        => 'Dinoyo',
-'Sumbersari'    => 'Sumbersari',
-'Sawojajar'     => 'Sawojajar',
-'Tlogomas'      => 'Tlogomas',
+   'Dumai'        => 'Dumai',
+'Cilacap'     => 'Cilacap',
+'Prabumulih'      => 'Prabumulih',
+'Cirebon'         => 'Cirebon',
+'Plaju'      => 'Plaju',
+'Pertamina Retail' => 'Pertamina Retail',
+'Pertamina EP'        => 'Pertamina EP',
+'Balikpapan'    => 'Balikpapan',
+'Balongan'     => 'Balongan',
+'Bazma Pusat'      => 'Bazma Pusat',
 
     ];
 

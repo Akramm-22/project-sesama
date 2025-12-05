@@ -108,6 +108,22 @@
         border-left: none;
         border-top: none;
     }
+
+@media (max-width:576px){
+
+    #btnCamera{
+        display:block;
+        width:100%;
+        margin-bottom:10px !important;
+    }
+
+    #btnManual{
+        display:block;
+        width:100%;
+        margin-top:4px !important;
+    }
+}
+
 </style>
 
 <div class="page-header">
@@ -390,7 +406,7 @@
         e.preventDefault();
 
         const id = document.getElementById('recipient_id').value;
-        const targetUrl = this.action || `https://sesama-baru.smktibazma.com/recipients/${id}/distribute`;
+        const targetUrl = this.action || `/recipients/${id}/distribute`;
         const formData = new FormData(this);
 
         fetch(targetUrl, {
@@ -460,20 +476,24 @@
             },
 
             // QR SUCCESS CALLBACK
-            qrMessage => {
-                // 🔊 PLAY BEEP
-                scanSound.currentTime = 0;
-                scanSound.play().catch(()=>{});
+           qrMessage => {
 
-                // fill input
-                document.getElementById("qr_code").value = qrMessage;
+    // 🔊 beep
+    scanSound.currentTime = 0;
+    scanSound.play().catch(()=>{});
 
-                stopScanner();
-                verifyQr(qrMessage);
-                // auto submit verify
-                document.getElementById("verifyForm")
-                    .dispatchEvent(new Event("submit"));
-            }
+    // isi input QR
+    document.getElementById("qr_code").value = qrMessage;
+
+    // stop kamera
+    stopScanner();
+
+    // submit form -> inilah yg munculin popup + fetch verify
+    document.getElementById("verifyForm")
+        .dispatchEvent(new Event("submit"));
+
+}
+
         )
         .then(() => {
             startFrameTracker();

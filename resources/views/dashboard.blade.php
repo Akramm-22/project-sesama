@@ -341,13 +341,141 @@
             transition-duration: 0.01ms !important;
         }
     }
+
+.stat-card,
+.info-box,
+.activity-item,
+.banner-section,
+.promo-card {
+    will-change: transform, opacity;
+}
+
+/* Banner glow polish */
+.banner-section{
+    box-shadow:
+        0 12px 28px rgba(30,64,175,.22),
+        0 4px 10px rgba(0,0,0,.12);
+}
+
+/* shimmer softer */
+.banner-section::before{
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.08),
+        transparent
+    );
+}
+
+/* Stat cards premium depth */
+.stat-card{
+    border-radius:16px;
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.08),
+        0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* smoother hover */
+.stat-card:hover{
+    transform: translateY(-6px) scale(1.015);
+}
+
+/* Icon glass feel */
+.stat-icon{
+    background: linear-gradient(135deg,
+        rgba(255,255,255,.7),
+        rgba(255,255,255,.3)
+    );
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.4),
+        0 6px 12px rgba(0,0,0,.12);
+}
+
+/* Progress bar glow */
+.progress-bar{
+    box-shadow:
+      inset 0 1px 2px rgba(255,255,255,.4),
+      0 3px 10px rgba(23,162,184,.35);
+}
+
+/* Info box refinement */
+.info-box{
+    background:#fff;
+    border-radius:18px;
+}
+
+/* Activity cards */
+.activity-item{
+    background: linear-gradient(135deg,#f9fafb,#ffffff);
+    border-radius:10px;
+}
+
+/* nicer hover */
+.activity-item:hover{
+    transform: translateX(6px);
+    background:#ecfdf5;
+}
+
+/* Text clearer */
+h2{
+    letter-spacing:.03em;
+}
+
+p{
+    line-height:1.55;
+}
+
+/* Button polish */
+.btn{
+    border-radius:10px !important;
+    letter-spacing:.04em;
+}
+
+/* Micro hover */
+.btn:hover{
+    transform: translateY(-1px);
+}
+
+/* Floating help icon smoother */
+.icon-float{
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Mobile UI fix */
+@media(max-width:767px){
+
+    .banner-section{
+        padding:20px;
+        border-radius:14px;
+    }
+
+    .stat-card{
+        border-radius:14px;
+    }
+
+    .stat-icon{
+        width:48px;
+        height:48px;
+        font-size:18px;
+    }
+
+    h2{
+        font-size:20px;
+    }
+
+}
+
 </style>
 
 <div class="banner-section mb-4">
     <div class="row align-items-center">
         <div class="col-md-8">
             <h2 class="fw-bold mb-2">Program Khitan Ceria 2025</h2>
-            <p class="mb-0">Kolaborasi Bazma dan Pertamina untuk mewujudkan pendidikan dan kesehatan anak Indonesia yang lebih baik</p>
+            <p class="mb-0">Dalam rangka HUT Pertamina ke-68, Bazma mengadakan khitanan untuk 1.000 anak Yatim & Dhuafa.
+
+Melalui program ini, kami ingin memberikan kesempatan bagi seluruh anak untuk mendapatkan perawatan kesehatan yang aman dan berkualitas. Dengan tenaga medis berpengalaman, peralatan yang higienis, dan suasana yang ramah anak, kami berharap dapat menciptakan pengalaman yang nyaman dan tanpa rasa khawatir bagi setiap peserta.
+
+Khitanan Ceria akan dilaksanakan pada tanggal 20 - 28 Desember 2025 di Jakarta, Cilacap, Cirebon, Balikpapan, Dumai, Plaju, Prabumulih</p>
         </div>
         <div class="col-md-4 text-end">
             <i class="fas fa-hands-helping icon-float" style="font-size: 80px; opacity: 0.3;"></i>
