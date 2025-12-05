@@ -7,7 +7,6 @@ use App\Http\Controllers\RecipientImportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Auth;
-
 Auth::routes();
 
 // =======================
@@ -27,6 +26,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/recipients/{recipient}/qr-code', [RecipientController::class, 'generateQrCode'])->name('recipients.qr-code');
     Route::get('/recipients/{recipient}/qr-print', [RecipientController::class, 'printQrCode'])->name('recipients.qr-print');
+    
     Route::get('/scan', [RecipientController::class, 'scanQr'])->name('recipients.scan');
     Route::post('/recipients/verify-qr', [RecipientController::class, 'verifyQr'])->name('recipients.verify-qr');
     Route::post('/recipients/{recipient}/distribute', [RecipientController::class, 'distribute'])->name('recipients.distribute');
@@ -49,7 +49,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // ===========================
     // export pdf status penyaluran
-    
+
     Route::get('/recipients/{recipient}/export-distribution',
     [RecipientController::class, 'exportDistribution'])
     ->name('recipients.export-distribution');

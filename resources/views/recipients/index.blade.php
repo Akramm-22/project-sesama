@@ -296,11 +296,12 @@
                    class="btn btn-success btn-custom">
                     <i class="fas fa-plus me-2"></i>Import Excel
                 </a>
-
-                <a href="{{ route('recipients.printAll') }}"
+                
+    <a href="{{ route('recipients.printAll') }}"
                    class="btn btn-info text-white btn-custom">
                     <i class="fas fa-download me-2"></i>Download QR
                 </a>
+
 
                 <a href="{{ route('recipients.create') }}"
                    class="btn btn-primary btn-custom">

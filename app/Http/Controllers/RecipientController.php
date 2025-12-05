@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use ZipArchive;
-
+use App\Jobs\GenerateAllQrZip;
 class RecipientController extends Controller
 {
     public const REGION_OPTIONS = [
@@ -225,7 +225,7 @@ class RecipientController extends Controller
 
 
 
-    public function printAllQrCodes()
+  public function printAllQrCodes()
     {
         $recipients = Recipient::all();
 

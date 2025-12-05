@@ -358,7 +358,7 @@
             e.preventDefault();
 
             const formData = new FormData(this);
-            fetch("{{ route('recipients.verifyQr') }}", {
+            fetch("{{ route('recipients.verify-qr') }}", {
                     method: "POST",
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,

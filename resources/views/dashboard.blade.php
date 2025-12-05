@@ -472,10 +472,7 @@ p{
         <div class="col-md-8">
             <h2 class="fw-bold mb-2">Program Khitan Ceria 2025</h2>
             <p class="mb-0">Dalam rangka HUT Pertamina ke-68, Bazma mengadakan khitanan untuk 1.000 anak Yatim & Dhuafa.
-
-Melalui program ini, kami ingin memberikan kesempatan bagi seluruh anak untuk mendapatkan perawatan kesehatan yang aman dan berkualitas. Dengan tenaga medis berpengalaman, peralatan yang higienis, dan suasana yang ramah anak, kami berharap dapat menciptakan pengalaman yang nyaman dan tanpa rasa khawatir bagi setiap peserta.
-
-Khitanan Ceria akan dilaksanakan pada tanggal 20 - 28 Desember 2025 di Jakarta, Cilacap, Cirebon, Balikpapan, Dumai, Plaju, Prabumulih</p>
+</p>
         </div>
         <div class="col-md-4 text-end">
             <i class="fas fa-hands-helping icon-float" style="font-size: 80px; opacity: 0.3;"></i>
@@ -572,13 +569,11 @@ Khitanan Ceria akan dilaksanakan pada tanggal 20 - 28 Desember 2025 di Jakarta, 
                 <h5 class="mb-0 fw-bold" style="color:#00c853;">Tentang Program</h5>
             </div>
             <p class="text-muted mb-2">
-                Program Khitan Ceria merupakan bentuk kepedulian Bazma dan Pertamina dalam mendukung kesehatan dan kesejahteraan anak-anak Indonesia.
+              Melalui program ini, kami ingin memberikan kesempatan bagi seluruh anak untuk mendapatkan perawatan kesehatan yang aman dan berkualitas. Dengan tenaga medis berpengalaman, peralatan yang higienis, dan suasana yang ramah anak, kami berharap dapat menciptakan pengalaman yang nyaman dan tanpa rasa khawatir bagi setiap peserta.
+
+Khitanan Ceria akan dilaksanakan pada tanggal 20 - 28 Desember 2025 di Jakarta, Cilacap, Cirebon, Balikpapan, Dumai, Plaju, Prabumulih
             </p>
-            <ul class="text-muted" style="font-size:14px;">
-                <li>Pelayanan khitan gratis untuk anak kurang mampu</li>
-                <li>Didukung oleh tenaga medis profesional</li>
-                <li>Dilengkapi dengan paket nutrisi dan obat-obatan</li>
-            </ul>
+
         </div>
     </div>
 
@@ -589,15 +584,15 @@ Khitanan Ceria akan dilaksanakan pada tanggal 20 - 28 Desember 2025 di Jakarta, 
                 <div class="stat-icon me-3" style="background-color:#fff8e1;">
                     <i class="fas fa-calendar-check" style="color:#ff9800;"></i>
                 </div>
-                <h5 class="mb-0 fw-bold" style="color:#ff9800;">Kegiatan Terkini</h5>
+                <h5 class="mb-0 fw-bold" style="color:#ff9800;">Proses Kegiatan</h5>
             </div>
             <div class="activity-item" style="border-left-color:#ff9800;">
                 <h6 class="mb-1 fw-bold" style="color:#ff9800;">Registrasi Penerima Bantuan</h6>
                 <p class="mb-0 text-muted" style="font-size:13px;">Pendaftaran penerima bantuan sedang berlangsung</p>
             </div>
             <div class="activity-item" style="border-left-color:#ff9800;">
-                <h6 class="mb-1 fw-bold" style="color:#ff9800;">Verifikasi Data</h6>
-                <p class="mb-0 text-muted" style="font-size:13px;">Tim sedang memverifikasi kelengkapan data peserta</p>
+                <h6 class="mb-1 fw-bold" style="color:#ff9800;">Penyaluran</h6>
+                <p class="mb-0 text-muted" style="font-size:13px;">Menyalurkan Program dengan verifikasi </p>
             </div>
         </div>
     </div>
