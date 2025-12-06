@@ -264,7 +264,7 @@
                         </h5>
 
                         <form id="distributeForm"
-                            data-action-template="{{ route('https://sesama-baru.smktibazma.com/recipients/distribute', ['recipient' => '__RECIPIENT_ID__']) }}">
+                            data-action-template="{{ route('recipients.distribute', ['recipient' => '__RECIPIENT_ID__'], true) }}">
                             @csrf
                             <input type="hidden" name="recipient_id" id="recipient_id_2">
 
