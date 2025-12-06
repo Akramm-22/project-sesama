@@ -122,7 +122,43 @@
                 width: 100%;
                 margin-top: 4px !important;
             }
+
         }
+        /* === BUTTON KAMERA DEFAULT BIRU PUTIH === */
+.btn-camera-primary {
+    background: #2563eb !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+
+    box-shadow:
+        0 6px 14px rgba(37,99,235,0.45),
+        0 10px 22px rgba(37,99,235,0.25);
+
+    transition: all .2s ease;
+}
+
+/* icon putih */
+.btn-camera-primary i {
+    color: #fff !important;
+}
+
+/* hover tetap biru (sedikit naik tone aja) */
+.btn-camera-primary:hover,
+.btn-camera-primary:focus,
+.btn-camera-primary:active {
+    background: #1d4ed8 !important;
+    color: #fff !important;
+
+    box-shadow:
+        0 8px 18px rgba(37,99,235,0.55),
+        0 12px 28px rgba(37,99,235,0.35);
+
+    transform: translateY(-1px);
+}
+
     </style>
 
     <div class="page-header">
@@ -145,7 +181,8 @@
 
                 <!-- PILIH MODE -->
                 <div class="text-center mt-3 mb-2">
-                    <button type="button" class="btn btn-outline-primary btn-custom" id="btnCamera">
+                   <button type="button" class="btn btn-camera-primary btn-custom" id="btnCamera">
+
                         <i class="fas fa-camera me-2"></i> Scan via Kamera
                     </button>
 

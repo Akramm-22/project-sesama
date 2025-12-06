@@ -16,7 +16,6 @@ class Recipient extends Model
         'Ibu_name',
         'whatsapp_number',
         'registrasi',
-        'birth_place',
         'birth_date',
         'address',
         'region',
