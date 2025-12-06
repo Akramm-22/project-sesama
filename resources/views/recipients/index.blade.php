@@ -206,7 +206,7 @@
 ============================= -->
 <div class="page-header">
     <h2>Data Penerima</h2>
-    <p>Kelola data penerima bantuan pendidikan</p>
+    <p>Kelola data penerima bantuan khitanan </p>
 </div>
 
 
