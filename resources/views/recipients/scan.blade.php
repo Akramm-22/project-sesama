@@ -395,7 +395,7 @@
             e.preventDefault();
 
             const formData = new FormData(this);
-            fetch("{{ route('recipients.verify-qr') }}", {
+            fetch("https://sesama-baru.smktibazma.com/recipients/verify-qr", {
                     method: "POST",
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
