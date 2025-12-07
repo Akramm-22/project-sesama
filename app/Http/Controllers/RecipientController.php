@@ -412,7 +412,7 @@ public function printQrCode(Recipient $recipient)
             $lastRecipient = Recipient::orderBy('id', 'desc')->first();
             $nextNumber = $lastRecipient ? $lastRecipient->id + 1 : 1;
 
-            $qrCode = 'CBP' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+            $qrCode = 'CK' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
         } while (Recipient::where('qr_code', $qrCode)->exists());
 
         return $qrCode;
