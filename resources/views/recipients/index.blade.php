@@ -260,7 +260,7 @@
                     <i class="fas fa-plus me-1"></i> Import Excel
                 </a>
 
-                <a href="{{ route('recipients.printAll') }}"
+                <a href="{{ route('recipients.qr-print') }}"
                    class="btn btn-info text-white btn-custom">
                     <i class="fas fa-download me-1"></i> Download QR
                 </a>
