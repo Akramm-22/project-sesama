@@ -264,7 +264,7 @@
                         </h5>
 
                         <form id="distributeForm"
-                            data-action-template="{{ route('recipients.distribute', ['recipient' => '__RECIPIENT_ID__']) }}">
+                            data-action-template="{{ route('recipients.distribute', ['recipient' => '__RECIPIENT_ID__'], true) }}">
                             @csrf
                             <input type="hidden" name="recipient_id" id="recipient_id_2">
 
@@ -395,7 +395,7 @@
             e.preventDefault();
 
             const formData = new FormData(this);
-            fetch("{{ route('recipients.verify-qr') }}", {
+            fetch("https://sesama-baru.smktibazma.com/recipients/verify-qr", {
                     method: "POST",
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
