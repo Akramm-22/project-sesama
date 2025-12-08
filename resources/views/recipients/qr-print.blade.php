@@ -121,6 +121,10 @@
 <body>
 
 <div class="qr-container">
+<div class="logo-wrap">
+    <img src="{{ asset('image/logo.png') }}" class="logo" alt="BZMA x Pertamina">
+</div>
+
 
     <div class="header">Khitanan Ceria</div>
     <div class="subtitle">Menebar Kebermanfaatan</div>
@@ -147,7 +151,8 @@
             </tr>
             <tr>
                 <td>Tanggal Lahir</td>
-                <td>{{ $recipient->birth_date }}</td>
+          <td>{{ \Carbon\Carbon::parse($recipient->birth_date)->format('d-m-Y') }}</td>
+
             </tr>
             <tr>
                 <td>Nomor WA</td>

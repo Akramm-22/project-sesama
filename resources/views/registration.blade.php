@@ -112,7 +112,7 @@
                 width: 70px;
                 height: 70px;
             }
-         
+
 @media (max-width:576px){
 
     #btnCamera{
@@ -295,7 +295,7 @@
 
 
         function showPopup(type, message) {
-            // kamu bisa ganti dengan toastr/sweetalert; ini sederhana:
+
             alert((type || '').toUpperCase() + ": " + (message || ''));
         }
 

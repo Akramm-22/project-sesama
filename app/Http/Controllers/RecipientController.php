@@ -12,7 +12,9 @@ use Illuminate\Validation\Rule;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use ZipArchive;
-use App\Jobs\GenerateAllQrZip;
+use Imagick;
+use Illuminate\Support\Facades\File;
+
 class RecipientController extends Controller
 {
     public const REGION_OPTIONS = [
@@ -166,101 +168,108 @@ public function printQrCode(Recipient $recipient)
 
 
 
+public function printAllQrCodes()
+{
+    $recipients = Recipient::all();
 
-
-  public function printAllQrCodes()
-    {
-        $recipients = Recipient::all();
-
-        if ($recipients->isEmpty()) {
-            return back()->with('error', 'Tidak ada data penerima.');
-        }
-
-        // Folder sementara untuk PNG
-        $tempDir = storage_path('app/temp_qr_codes');
-        if (!file_exists($tempDir)) {
-            mkdir($tempDir, 0777, true);
-        }
-
-        $zipFile = storage_path('app/qr_codes_all.zip');
-        $zip = new ZipArchive;
-
-        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-            foreach ($recipients as $recipient) {
-                // Buat PNG dengan desain yang sama seperti printQrCode()
-                $width = 350;
-                $height = 450;
-                $image = imagecreatetruecolor($width, $height);
-
-                // Warna
-                $white = imagecolorallocate($image, 255, 255, 255);
-                $black = imagecolorallocate($image, 0, 0, 0);
-                $blue  = imagecolorallocate($image, 0, 113, 188);
-                $gray  = imagecolorallocate($image, 102, 102, 102);
-
-                // Background putih
-                imagefilledrectangle($image, 0, 0, $width, $height, $white);
-
-                // Border
-                imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-
-                // Header
-                imagestring($image, 5, 80, 15, 'BAZMA PERTAMINA', $black);
-                imagestring($image, 3, 80, 35, 'Menebar Kebermanfaatan', $black);
-
-                // QR code sementara
-                $qrTempPath = storage_path('app/temp-qr.png');
-                QrCode::format('png')->size(150)->generate($recipient->qr_code, $qrTempPath);
-                $qrImg = imagecreatefrompng($qrTempPath);
-                imagecopy($image, $qrImg, 100, 60, 0, 0, 150, 150);
-                imagedestroy($qrImg);
-                unlink($qrTempPath);
-
-                // QR text
-                imagestring($image, 5, 120, 220, $recipient->qr_code, $blue);
-
-                // Info penerima
-                $info = [
-                    'Nama'    => $recipient->child_name,
-                    'Ayah'    => $recipient->Ayah_name,
-                    'Ibu'     => $recipient->Ibu_name,
-                    'Tanggal Lahir' => $recipient->birth_date ?? '-',
-
-                ];
-                $y = 250;
-                foreach ($info as $label => $value) {
-                    imagestring($image, 3, 20, $y, $label . ':', $black);
-                    imagestring($image, 3, 100, $y, $value, $black);
-                    $y += 18;
-                }
-
-                // Footer
-                imagestring($image, 2, 20, $height - 35, 'Scan QR ini saat penyaluran bantuan', $gray);
-                imagestring($image, 2, 20, $height - 20, 'Program Cilincing - Jakarta Utara', $gray);
-
-                // Simpan PNG ke folder sementara
-                $pngPath = $tempDir . '/qr-code-' . $recipient->qr_code . '.png';
-                imagepng($image, $pngPath);
-                imagedestroy($image);
-
-                // Masukkan ke ZIP
-                $zip->addFile($pngPath, basename($pngPath));
-            }
-
-            $zip->close();
-        } else {
-            return back()->with('error', 'Gagal membuat file ZIP.');
-        }
-
-        // Hapus file PNG sementara
-        foreach (glob($tempDir . '/*.png') as $file) {
-            unlink($file);
-        }
-        rmdir($tempDir);
-
-        // Download ZIP
-        return response()->download($zipFile)->deleteFileAfterSend(true);
+    if ($recipients->isEmpty()) {
+        return back()->with('error', 'Tidak ada data penerima.');
     }
+
+    $tempDir = storage_path('app/temp_qr_codes');
+
+    if (!file_exists($tempDir)) {
+        mkdir($tempDir, 0777, true);
+    }
+
+    $zipFile = storage_path('app/qr_codes_all.zip');
+    $zip = new ZipArchive;
+
+    if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        return back()->with('error', 'Gagal membuat ZIP.');
+    }
+
+    foreach ($recipients as $recipient) {
+
+        $width  = 380;
+        $height = 520;
+
+        $image = imagecreatetruecolor($width, $height);
+
+        // ===== COLOR =====
+        $bg       = imagecolorallocate($image, 245, 247, 250);
+        $white    = imagecolorallocate($image, 255, 255, 255);
+        $primary  = imagecolorallocate($image, 0, 91, 172);
+        $blue     = imagecolorallocate($image, 0, 113, 188);
+        $gray     = imagecolorallocate($image, 120, 120, 120);
+        $dark     = imagecolorallocate($image, 40, 40, 40);
+
+        imagefilledrectangle($image, 0, 0, $width, $height, $bg);
+
+        // ===== CARD =====
+        imagefilledrectangle($image, 20, 20, $width-20, $height-20, $white);
+        imagerectangle($image, 20,20,$width-20,$height-20,$gray);
+
+        // ===== HEADER =====
+        imagestring($image, 5, 105, 45, 'KHITANAN CERIA', $primary);
+        imagestring($image, 3, 120, 70, 'Menebar Kebermanfaatan', $gray);
+
+        // ===== QR =====
+        $qrTempPath = storage_path('app/temp-qr.png');
+        QrCode::format('png')->size(160)->generate($recipient->qr_code, $qrTempPath);
+        $qrImg = imagecreatefrompng($qrTempPath);
+
+        imagecopy($image, $qrImg, 110, 105, 0, 0, 160, 160);
+        imagedestroy($qrImg);
+        unlink($qrTempPath);
+
+        // QR number
+        imagestring($image, 5, 140, 275, $recipient->qr_code, $blue);
+
+        // ===== TABLE INFO =====
+        $y = 310;
+
+        $info = [
+            'Nama'      => $recipient->child_name,
+            'Ayah'      => $recipient->Ayah_name,
+            'Ibu'       => $recipient->Ibu_name,
+            'Lahir'     => $recipient->birth_date
+                                ? \Carbon\Carbon::parse($recipient->birth_date)->format('d-m-Y')
+                                : '-',
+            'WhatsApp'  => $recipient->whatsapp_number ?? '-'
+        ];
+
+        foreach ($info as $label => $value)
+        {
+            imagestring($image, 3, 40, $y, $label, $dark);
+            imagestring($image, 3, 155, $y, ': ' . $value, $dark);
+            $y += 22;
+        }
+
+        // ===== FOOTER =====
+        imagestring($image, 2, 55, $height - 55, 'Scan QR ini saat registrasi penyaluran', $gray);
+        imagestring($image, 2, 120, $height - 35, 'Program Khitanan Ceria', $gray);
+
+        // ===== SAVE PNG =====
+        $pngPath = $tempDir . '/QR-' . $recipient->qr_code . '.png';
+        imagepng($image, $pngPath);
+        imagedestroy($image);
+
+        // ===== ADD TO ZIP =====
+        $zip->addFile($pngPath, basename($pngPath));
+    }
+
+    $zip->close();
+
+    // ===== CLEANUP =====
+    foreach (glob($tempDir . '/*') as $file) {
+        if (is_file($file)) unlink($file);
+    }
+    rmdir($tempDir);
+
+    return response()->download($zipFile)->deleteFileAfterSend(true);
+}
+
 
 
     public function scanQr()

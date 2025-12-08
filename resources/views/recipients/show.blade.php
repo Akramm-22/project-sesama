@@ -38,7 +38,7 @@
                     </tr>
                     <tr>
                         <td><strong>Tempat, Tanggal Lahir:</strong></td>
-                        <td>{{ $recipient->birth_place }}, {{ $recipient->birth_date->format('d F Y') }}</td>
+                        <td>{{ $recipient->birth_place }} {{ $recipient->birth_date->format('d F Y') }}</td>
                     </tr>
                     <tr>
                         <td><strong>Alamat:</strong></td>
